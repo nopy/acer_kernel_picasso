@@ -1183,7 +1183,8 @@ static void ventana_power_off(void)
 
 static void __init ventana_power_off_init(void)
 {
-	pm_power_off = SysShutdown;
+//	pm_power_off = SysShutdown;
+	pm_power_off = ventana_power_off;
 }
 
 #define AHB_ARBITRATION_DISABLE	0x0

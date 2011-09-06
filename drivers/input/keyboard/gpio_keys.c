@@ -366,7 +366,8 @@ static void gpio_keys_work_func(struct work_struct *work)
 
 	if (atomic_read(&wakeup_flag) == 0) {
 		atomic_set(&wakeup_flag,1);
-		if (!is3Gwakeup()) {
+		//if (!is3Gwakeup()) {
+		if (true) {
 			printk(KERN_INFO "%s: first time report gpio_keys_report_event\n", __func__);
 			wakeup_resume_flag = 1;
 			gpio_keys_report_event(bdata);
@@ -654,7 +655,8 @@ static int gpio_keys_resume(struct device *dev)
 	pr_info("%s\n", __func__);
 
 	if (wakeup_resume_flag == -1) {
-		if (!is3Gwakeup()) {
+		//if (!is3Gwakeup()) {
+		if (true) {
 			wakeup_resume_flag = 1;
 		}
 	}

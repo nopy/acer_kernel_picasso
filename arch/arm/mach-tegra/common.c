@@ -249,7 +249,8 @@ static int tegra_pm_flush_console(struct notifier_block *this,
 static void tegra_pm_restart(char mode, const char *cmd)
 {
 #if defined(CONFIG_MACH_ACER_PICASSO)||defined(CONFIG_MACH_ACER_MAYA)||defined(CONFIG_MACH_ACER_VANGOGH)
-	SysRestart();
+	//SysRestart();
+	arm_machine_restart(mode, cmd);
 #else
 	arm_machine_restart(mode, cmd);
 #endif
