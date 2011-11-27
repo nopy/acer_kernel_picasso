@@ -66,7 +66,7 @@ struct input_absinfo {
 #define EVIOCGNAME(len)		_IOC(_IOC_READ, 'E', 0x06, len)		/* get device name */
 #define EVIOCGPHYS(len)		_IOC(_IOC_READ, 'E', 0x07, len)		/* get physical location */
 #define EVIOCGUNIQ(len)		_IOC(_IOC_READ, 'E', 0x08, len)		/* get unique identifier */
-
+#define EVIOCGPROP(len)		_IOC(_IOC_READ, 'E', 0x09, len)		/* get device properties */
 #define EVIOCGKEY(len)		_IOC(_IOC_READ, 'E', 0x18, len)		/* get global keystate */
 #define EVIOCGLED(len)		_IOC(_IOC_READ, 'E', 0x19, len)		/* get all LEDs */
 #define EVIOCGSND(len)		_IOC(_IOC_READ, 'E', 0x1a, len)		/* get all sounds status */
@@ -81,6 +81,17 @@ struct input_absinfo {
 #define EVIOCGEFFECTS		_IOR('E', 0x84, int)			/* Report number of effects playable at the same time */
 
 #define EVIOCGRAB		_IOW('E', 0x90, int)			/* Grab/Release device */
+
+/*
+* Device properties and quirks
+*/
+
+#define INPUT_PROP_POINTER    0x00  /* needs a pointer */
+#define INPUT_PROP_DIRECT    0x01  /* direct input devices */
+#define INPUT_PROP_BUTTONPAD    0x02  /* has button(s) under pad */
+#define INPUT_PROP_SEMI_MT    0x03  /* touch rectangle only */
+#define INPUT_PROP_MAX      0x1f
+#define INPUT_PROP_CNT      (INPUT_PROP_MAX + 1)
 
 /*
  * Event types
@@ -708,6 +719,7 @@ struct input_absinfo {
 #define ABS_MT_BLOB_ID		0x38	/* Group a set of packets as a blob */
 #define ABS_MT_TRACKING_ID	0x39	/* Unique ID of initiated contact */
 #define ABS_MT_PRESSURE		0x3a	/* Pressure on contact area */
+#define ABS_MT_DISTANCE		0x3b	/* Contact hover distance */
 
 #ifdef __KERNEL__
 /* Implementation details, userspace should not care about these */
@@ -1153,6 +1165,7 @@ struct input_dev {
 	const char *uniq;
 	struct input_id id;
 
+	unsigned long propbit[BITS_TO_LONGS(INPUT_PROP_CNT)] ;
 	unsigned long evbit[BITS_TO_LONGS(EV_CNT)];
 	unsigned long keybit[BITS_TO_LONGS(KEY_CNT)];
 	unsigned long relbit[BITS_TO_LONGS(REL_CNT)];

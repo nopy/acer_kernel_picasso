@@ -535,12 +535,13 @@ static void mxt_worker(struct work_struct *work)
 						"Report Point[%d] Update: Status=%d X=%d Y=%d\n",
 						i, mxt->PointBuf[i].Status, mxt->PointBuf[i].X, mxt->PointBuf[i].Y);
 
+					input_report_abs(mxt->input, ABS_MT_SLOT, i);
 					input_report_abs(mxt->input, ABS_MT_TRACKING_ID, i);
-					input_report_abs(mxt->input, ABS_MT_TOUCH_MAJOR, mxt->PointBuf[i].Status);
+					input_report_abs(mxt->input, ABS_MT_PRESSURE, mxt->PointBuf[i].Status);
 					input_report_abs(mxt->input, ABS_MT_POSITION_X, mxt->PointBuf[i].X);
 					input_report_abs(mxt->input, ABS_MT_POSITION_Y, mxt->PointBuf[i].Y);
 
-					input_mt_sync(mxt->input);
+					//input_mt_sync(mxt->input);
 
 					if (mxt->PointBuf[i].Status == 0)
 						mxt->PointBuf[i].Status--;
@@ -1525,26 +1526,33 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
 
 	INIT_DELAYED_WORK(&mxt->dwork, mxt_worker);
 
-	set_bit(BTN_TOUCH, input->keybit);
+	__set_bit(INPUT_PROP_DIRECT, input->propbit ) ;
+	
+	//set_bit(BTN_TOUCH, input->keybit);
 	set_bit(EV_ABS, input->evbit);
-	set_bit(EV_SYN, input->evbit);
-	set_bit(EV_KEY, input->evbit);
+	//set_bit(EV_SYN, input->evbit);
+	//set_bit(EV_KEY, input->evbit);
 
-	set_bit(ABS_MT_TOUCH_MAJOR, input->keybit);
-	set_bit(ABS_MT_POSITION_X, input->keybit);
-	set_bit(ABS_MT_POSITION_Y, input->keybit);
-	set_bit(ABS_X, input->keybit);
-	set_bit(ABS_Y, input->keybit);
+	//set_bit(ABS_MT_TOUCH_MAJOR, input->keybit);
+	set_bit(ABS_MT_POSITION_X, input->absbit);
+	set_bit(ABS_MT_POSITION_Y, input->absbit);
+	set_bit(ABS_MT_PRESSURE, input->absbit);
+	set_bit(ABS_MT_SLOT, input->absbit);
+	set_bit(ABS_MT_TRACKING_ID, input->absbit);
+	//set_bit(ABS_X, input->keybit);
+	//set_bit(ABS_Y, input->keybit);
 
 	/* single touch */
-	input_set_abs_params(input, ABS_X, X_MIN, X_MAX, 0, 0);
-	input_set_abs_params(input, ABS_Y, Y_MIN, Y_MAX, 0, 0);
-	input_set_abs_params(input, ABS_PRESSURE, 0, MXT_MAX_REPORTED_PRESSURE, 0, 0);
+	//input_set_abs_params(input, ABS_X, X_MIN, X_MAX, 0, 0);
+	//input_set_abs_params(input, ABS_Y, Y_MIN, Y_MAX, 0, 0);
+	//input_set_abs_params(input, ABS_PRESSURE, 0, MXT_MAX_REPORTED_PRESSURE, 0, 0);
 
 	/* multiple touch */
 	input_set_abs_params(input, ABS_MT_POSITION_X, X_MIN, X_MAX, 0, 0);
 	input_set_abs_params(input, ABS_MT_POSITION_Y, Y_MIN, Y_MAX, 0, 0);
-	input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0, MXT_MAX_TOUCH_SIZE, 0, 0);
+	//input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0, MXT_MAX_TOUCH_SIZE, 0, 0);
+	input_set_abs_params(input, ABS_MT_PRESSURE, 0, MXT_MAX_TOUCH_SIZE, 0, 0);
+	input_set_abs_params(input, ABS_MT_SLOT, 0, NUM_FINGERS_SUPPORTED, 0, 0);
 	input_set_abs_params(input, ABS_MT_TRACKING_ID, 0, NUM_FINGERS_SUPPORTED,0, 0);
 
 	i2c_set_clientdata(client, mxt);
