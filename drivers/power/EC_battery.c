@@ -445,7 +445,7 @@ static ssize_t BTMAC_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 		msleep(10);
 	}
 
-	s += sprintf(s, "%02x%02x%02x%02x%02x%02x\n",val8[5],val8[4],val8[3],val8[2],val8[1],val8[0]);
+	s += sprintf(s, "%02x:%02x:%02x:%02x:%02x:%02x\n",val8[5],val8[4],val8[3],val8[2],val8[1],val8[0]);
 
 	return (s - buf);
 }
