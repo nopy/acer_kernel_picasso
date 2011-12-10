@@ -30,6 +30,7 @@
 #include "xt_qtaguid_internal.h"
 #include "xt_qtaguid_print.h"
 
+#define pr_warn_once printk
 /*
  * We only use the xt_socket funcs within a similar context to avoid unexpected
  * return values.
@@ -890,14 +891,16 @@ static void _iface_stat_set_active(struct iface_stat *entry,
 		IF_DEBUG("qtaguid: %s(%s): "
 			 "enable tracking. rfcnt=%d\n", __func__,
 			 entry->ifname,
-			 percpu_read(*net_dev->pcpu_refcnt));
+			 0); 
+			 //percpu_read(*net_dev->pcpu_refcnt));
 	} else {
 		entry->active = false;
 		entry->net_dev = NULL;
 		IF_DEBUG("qtaguid: %s(%s): "
 			 "disable tracking. rfcnt=%d\n", __func__,
 			 entry->ifname,
-			 percpu_read(*net_dev->pcpu_refcnt));
+			 0);
+			 //percpu_read(*net_dev->pcpu_refcnt));
 
 	}
 }
@@ -1509,9 +1512,11 @@ static struct sock *qtaguid_find_sk(const struct sk_buff *skb,
 		return NULL;
 
 	switch (par->family) {
+#ifdef XT_SOCKET_HAVE_IPV6
 	case NFPROTO_IPV6:
 		sk = xt_socket_get6_sk(skb, par);
 		break;
+#endif
 	case NFPROTO_IPV4:
 		sk = xt_socket_get4_sk(skb, par);
 		break;
