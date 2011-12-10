@@ -1332,14 +1332,10 @@ module_param_call(hashsize, nf_conntrack_set_hashsize, param_get_uint,
 
 void nf_ct_untracked_status_or(unsigned long bits)
 {
-<<<<<<< HEAD
 	int cpu;
 
 	for_each_possible_cpu(cpu)
 		per_cpu(nf_conntrack_untracked, cpu).status |= bits;
-=======
-	nf_conntrack_untracked.status |= bits;
->>>>>>> f772093... netfilter: nf_conntrack: IPS_UNTRACKED bit
 }
 EXPORT_SYMBOL_GPL(nf_ct_untracked_status_or);
 
