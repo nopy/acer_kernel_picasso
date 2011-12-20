@@ -5,6 +5,8 @@ LOCAL_PATH := $(call my-dir)
 
 ifdef BUILD_KERNEL
 ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),picasso)
+include $(CLEAR_VARS)
+KERNEL_SRC := $(LOCAL_PATH)
 KERNEL_OUT := $(TARGET_OUT_INTERMEDIATES)/kernel
 KERNEL_CONFIG := $(KERNEL_OUT)/.config
 TARGET_PREBUILT_KERNEL := $(KERNEL_OUT)/arch/arm/boot/zImage
@@ -20,7 +22,7 @@ $(KERNEL_CONFIG): $(LOCAL_PATH)/arch/arm/configs/picasso_defconfig | $(ACP)
 	$(transform-prebuilt-to-target)
 
 $(TARGET_PREBUILT_KERNEL): $(KERNEL_OUT) $(KERNEL_CONFIG)
-	$(MAKE) -C kernel-picasso O=../$(KERNEL_OUT) ARCH=arm CROSS_COMPILE=$(shell pwd)/prebuilt/linux-x86/toolchain/arm-eabi-4.4.3/bin/arm-eabi- INSTALL_MOD_STRIP=1
+	$(MAKE) -C $(KERNEL_SRC) O=../../$(KERNEL_OUT) ARCH=arm CROSS_COMPILE=$(shell pwd)/prebuilt/linux-x86/toolchain/arm-eabi-4.4.3/bin/arm-eabi- INSTALL_MOD_STRIP=1
 endif
 endif
 
